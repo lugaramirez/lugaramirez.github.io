@@ -708,6 +708,100 @@
 
 
     <!-- ════════════════════════════════════════
+         CASE STUDY — THIS PRESENTATION ITSELF
+    ═════════════════════════════════════════ -->
+
+    <!-- ┌─────────────────────────────────────┐
+         │  SLIDE · Case study cover           │
+         └───────────────────────────────────── -->
+    <div class="slide section-cover" data-section="Case study">
+      <span class="section-num" style="color:rgba(120,90,160,0.10)">ex</span>
+      <div class="eyebrow">Case study</div>
+      <h2>This presentation<br>was built with AI</h2>
+      <p>A real example of agents at work, hallucination-adjacent failure, and honest framing — all in one session.</p>
+    </div>
+
+
+    <!-- ┌─────────────────────────────────────┐
+         │  SLIDE · What was asked             │
+         └───────────────────────────────────── -->
+    <div class="slide" data-section="Case study">
+      <div class="rule"></div>
+      <h2>The brief</h2>
+      <p>A software engineer asked an AI assistant to build a deployable presentation about "speaking about AI" — covering agents, hallucinations, and what AI actually is — with no prior content prepared.</p>
+      <div class="steps" style="margin-top:18px;">
+        <div class="step">
+          <div class="step-n">1</div>
+          <div class="step-body"><strong>Explored the format</strong> — interactive HTML vs PowerPoint, with an honest trade-off comparison</div>
+        </div>
+        <div class="step">
+          <div class="step-n">2</div>
+          <div class="step-body"><strong>Generated a live demo</strong> in-chat to validate the approach before committing to a file</div>
+        </div>
+        <div class="step">
+          <div class="step-n">3</div>
+          <div class="step-body"><strong>Produced a full <code>index.html</code></strong> — 18 slides, structured, commented, ready for GitHub Pages</div>
+        </div>
+        <div class="step">
+          <div class="step-n">4</div>
+          <div class="step-body"><strong>Iterated on design</strong> — dark theme swapped to light pastels on request, one prompt</div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ┌─────────────────────────────────────┐
+         │  SLIDE · The failure                │
+         └───────────────────────────────────── -->
+    <div class="slide" data-section="Case study">
+      <div class="rule"></div>
+      <h2>Then something broke</h2>
+      <p>Keyboard navigation stopped working. The in-chat preview was suspected first — iframes can block key events. But the real cause was different.</p>
+      <div class="callout">
+        <p>The file creation tool had silently truncated the output mid-line. The closing <code>&lt;/script&gt;</code>, swipe handlers, and <code>&lt;/html&gt;</code> were simply missing — with no warning.</p>
+      </div>
+      <div class="two-col" style="margin-top:14px;">
+        <div class="card">
+          <div class="card-label">What the AI did wrong</div>
+          <p>Generated a file too large for the tool's limit without detecting the truncation or warning the user.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">What fixed it</div>
+          <p>The engineer reported the symptom. The AI inspected the raw file, found the cut-off point, and appended the missing code.</p>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ┌─────────────────────────────────────┐
+         │  SLIDE · What this illustrates      │
+         └───────────────────────────────────── -->
+    <div class="slide" data-section="Case study">
+      <div class="rule"></div>
+      <h2>What this illustrates</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-n">01</div>
+          <div class="step-body"><strong>Agents produce real output with real consequences</strong> — a broken file deployed is a broken site. Verify before you ship.</div>
+        </div>
+        <div class="step">
+          <div class="step-n">02</div>
+          <div class="step-body"><strong>Failures are often silent</strong> — the model didn't know it had truncated the file. It completed a pattern. The output looked plausible.</div>
+        </div>
+        <div class="step">
+          <div class="step-n">03</div>
+          <div class="step-body"><strong>Tool limits matter as much as model limits</strong> — the constraint wasn't intelligence, it was infrastructure. Know your stack.</div>
+        </div>
+        <div class="step">
+          <div class="step-n">04</div>
+          <div class="step-body"><strong>A human in the loop caught it</strong> — the engineer tested the output, spotted the symptom, and prompted a fix. That's the workflow.</div>
+        </div>
+      </div>
+      <p class="note">// This slide was added at the engineer's request, during the same session that produced the rest of this deck.</p>
+    </div>
+
+
+    <!-- ════════════════════════════════════════
          CLOSING
     ═════════════════════════════════════════ -->
 
@@ -807,4 +901,21 @@
 
   /* touch swipe support */
   let touchStartX = 0;
-  document.addEventListener('touchstart', e => { touchStartX = e.touches
+  document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 40) goTo(current + (dx < 0 ? 1 : -1));
+  });
+
+  /* grab focus so keyboard/spacebar work inside the iframe preview */
+  const shell = document.getElementById('shell');
+  shell.setAttribute('tabindex', '-1');
+  shell.style.outline = 'none';
+  shell.focus();
+  document.addEventListener('click', () => shell.focus());
+
+  goTo(0);
+</script>
+
+</body>
+</html>
