@@ -336,54 +336,99 @@
       padding-top: 8px;
     }
 
-    /* =============================================
-       SPEAKER NOTES
-       Press N to toggle. Hidden from audience view.
-    ============================================= */
+    /* Speaker notes are hidden in the deck view;
+       only visible in the presenter tab (?view=notes). */
     .speaker-note { display: none; }
-
-    #notes-panel {
-      display: none;
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      background: var(--bg-card);
-      border-top: 0.5px solid var(--border-hi);
-      padding: 10px 28px;
-      font-family: var(--mono);
-      font-size: 12px;
-      color: var(--text-mid);
-      z-index: 100;
-      max-height: 90px;
-      overflow-y: auto;
-    }
-    #notes-panel.visible { display: block; }
-    #notes-panel .notes-label {
-      font-size: 10px;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 4px;
-    }
-    #notes-toggle {
-      position: fixed;
-      bottom: 8px; right: 28px;
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--text-lo);
-      background: transparent;
-      border: 0.5px solid var(--border);
-      border-radius: 4px;
-      padding: 3px 8px;
-      cursor: pointer;
-      z-index: 101;
-      letter-spacing: 0.06em;
-    }
-    #notes-toggle:hover { color: var(--accent); border-color: var(--accent); }
 
     @media (max-width: 600px) {
       #shell { padding: 12px 14px; gap: 10px; }
       .two-col { grid-template-columns: 1fr; }
       .section-cover .section-num { font-size: 80px; }
+    }
+
+    /* =============================================
+       NOTES (PRESENTER) VIEW  — ?view=notes
+       Collapses the slide canvas; shows the
+       presenter panel in its place.
+    ============================================= */
+    body.notes-mode #shell { grid-template-rows: 1fr auto; }
+    body.notes-mode #topbar,
+    body.notes-mode #viewport { display: none; }
+
+    #presenter-panel {
+      display: none;
+      flex-direction: column;
+      gap: 24px;
+      overflow-y: auto;
+      padding: 5% 7%;
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: var(--bg-surface);
+    }
+    body.notes-mode #presenter-panel { display: flex; }
+
+    /* waiting state */
+    #pn-waiting {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text-lo);
+      text-align: center;
+    }
+    #pn-waiting .pn-hint { font-size: 11px; }
+
+    /* active state */
+    #pn-active { display: none; flex-direction: column; gap: 24px; }
+
+    #pn-slide-info {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      padding-bottom: 16px;
+      border-bottom: 0.5px solid var(--border-hi);
+    }
+    #pn-counter {
+      font-family: var(--mono);
+      font-size: clamp(20px, 3vw, 28px);
+      color: var(--accent);
+      font-weight: 500;
+    }
+    #pn-section-name {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-lo);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .pn-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    #pn-note-text {
+      font-size: clamp(15px, 2vw, 20px);
+      line-height: 1.75;
+      color: var(--text-hi);
+    }
+    #pn-note-text em { color: var(--text-lo); }
+
+    #pn-next-area {
+      padding-top: 16px;
+      border-top: 0.5px solid var(--border);
+    }
+    #pn-next-text {
+      font-size: clamp(12px, 1.4vw, 14px);
+      color: var(--text-mid);
     }
   </style>
 </head>
@@ -1208,6 +1253,29 @@
   </div><!-- /viewport -->
 
 
+  <!-- ── PRESENTER PANEL (notes view only) ─── -->
+  <div id="presenter-panel">
+    <div id="pn-waiting">
+      <span>Waiting for presenter…</span>
+      <span class="pn-hint">Open the main deck in another tab and navigate to any slide.</span>
+    </div>
+    <div id="pn-active">
+      <div id="pn-slide-info">
+        <span id="pn-counter">—</span>
+        <span id="pn-section-name">—</span>
+      </div>
+      <div id="pn-note-area">
+        <div class="pn-label">Speaker note</div>
+        <div id="pn-note-text"><em>No notes for this slide.</em></div>
+      </div>
+      <div id="pn-next-area">
+        <div class="pn-label">Up next</div>
+        <div id="pn-next-text">—</div>
+      </div>
+    </div>
+  </div>
+
+
   <!-- ── BOTTOM NAV ────────────────────────── -->
   <div id="nav">
     <button class="nav-btn" id="prev-btn" disabled>← prev</button>
@@ -1218,8 +1286,6 @@
 
 </div><!-- /shell -->
 
-<div id="notes-panel"><div class="notes-label">Speaker notes</div><div id="notes-content"></div></div>
-<button id="notes-toggle" title="Toggle speaker notes (N)">notes</button>
 
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
@@ -1240,6 +1306,42 @@
 
   function pad(n) { return String(n).padStart(2, '0'); }
 
+  /* Copies a speaker-note element's children into `el` via DOM
+     cloning (avoids innerHTML; content is same-page authored HTML). */
+  function renderNote(el, noteEl, dimEmpty) {
+    el.replaceChildren();
+    if (noteEl) {
+      el.append(...Array.from(noteEl.cloneNode(true).childNodes));
+    } else {
+      const em = document.createElement('em');
+      em.textContent = 'No notes for this slide.';
+      if (dimEmpty) em.style.opacity = '0.4';
+      el.appendChild(em);
+    }
+  }
+
+  /* ── Cross-tab sync via BroadcastChannel ────
+     Both the deck tab and the notes tab share
+     the 'slide-sync' channel. Either tab can
+     drive navigation; the other follows.
+     receivingRemote prevents echo loops.
+  ─────────────────────────────────────────── */
+  const channel         = new BroadcastChannel('slide-sync');
+  const isNotesView     = new URLSearchParams(location.search).get('view') === 'notes';
+  let   receivingRemote = false;
+
+  channel.onmessage = ({ data }) => {
+    if (data.type === 'goto') {
+      receivingRemote = true;
+      goTo(data.index);
+      receivingRemote = false;
+    }
+    /* notes tab just opened — deck responds with its current position */
+    if (data.type === 'request-sync' && !isNotesView) {
+      channel.postMessage({ type: 'goto', index: current });
+    }
+  };
+
   function goTo(idx) {
     slides[current].classList.remove('active');
     current = Math.max(0, Math.min(total - 1, idx));
@@ -1251,28 +1353,12 @@
     progress.style.width = ((current + 1) / total * 100).toFixed(1) + '%';
     label.textContent = slides[current].dataset.section || '';
     slideId.textContent = pad(current);
-    if (notesPanel.classList.contains('visible')) updateNotes();
+    if (!receivingRemote) channel.postMessage({ type: 'goto', index: current });
+    if (isNotesView) updatePresenterPanel();
   }
 
   prevBtn.addEventListener('click', () => goTo(current - 1));
   nextBtn.addEventListener('click', () => goTo(current + 1));
-
-  const notesPanel   = document.getElementById('notes-panel');
-  const notesContent = document.getElementById('notes-content');
-  const notesToggle  = document.getElementById('notes-toggle');
-
-  function updateNotes() {
-    const note = slides[current].querySelector('.speaker-note');
-    notesContent.innerHTML = note ? note.innerHTML : '<em style="opacity:0.4">No notes for this slide.</em>';
-  }
-
-  function toggleNotes() {
-    notesPanel.classList.toggle('visible');
-    notesToggle.textContent = notesPanel.classList.contains('visible') ? 'hide notes' : 'notes';
-    updateNotes();
-  }
-
-  notesToggle.addEventListener('click', toggleNotes);
 
   document.addEventListener('keydown', e => {
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
@@ -1281,7 +1367,6 @@
     if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
       e.preventDefault(); goTo(current - 1);
     }
-    if (e.key === 'n' || e.key === 'N') toggleNotes();
   });
 
   /* touch swipe support */
@@ -1299,7 +1384,37 @@
   shell.focus();
   document.addEventListener('click', () => shell.focus());
 
-  goTo(0);
+  /* ── Presenter panel ─────────────────────── */
+  const pnWaiting  = document.getElementById('pn-waiting');
+  const pnActive   = document.getElementById('pn-active');
+  const pnCounter  = document.getElementById('pn-counter');
+  const pnSection  = document.getElementById('pn-section-name');
+  const pnNoteText = document.getElementById('pn-note-text');
+  const pnNextText = document.getElementById('pn-next-text');
+
+  function updatePresenterPanel() {
+    pnWaiting.style.display = 'none';
+    pnActive.style.display  = 'flex';
+    pnCounter.textContent   = pad(current + 1) + ' / ' + pad(total);
+    pnSection.textContent   = slides[current].dataset.section || '—';
+    renderNote(pnNoteText, slides[current].querySelector('.speaker-note'), false);
+    const next = slides[current + 1];
+    if (next) {
+      const h = next.querySelector('h2, h1');
+      pnNextText.textContent = (h ? h.textContent : '—') +
+        (next.dataset.section ? ' · ' + next.dataset.section : '');
+    } else {
+      pnNextText.textContent = '— end of presentation —';
+    }
+  }
+
+  if (isNotesView) document.body.classList.add('notes-mode');
+
+  /* Suppress broadcast on initial render so the notes tab does not
+     reset a deck that's already mid-presentation. Then request the
+     current slide from the deck if opening the notes view. */
+  receivingRemote = true; goTo(0); receivingRemote = false;
+  if (isNotesView) channel.postMessage({ type: 'request-sync' });
 </script>
 
 </body>
