@@ -59,4 +59,4 @@ To add speaker notes to a slide, include:
 <aside class="speaker-note">Your note here.</aside>
 ```
 
-Notes are hidden from the audience view and only appear in the presenter tab or when pressing `N`.
+Notes are hidden from the audience view and only appear in the presenter tab.
