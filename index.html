@@ -312,6 +312,30 @@
     /* =============================================
        RESPONSIVE — below 600px collapse gracefully
     ============================================= */
+    sup.cit {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--accent);
+      vertical-align: super;
+      margin-left: 2px;
+    }
+    .ref-list { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+    .ref-item { display: flex; gap: 12px; align-items: flex-start; }
+    .ref-num { font-family: var(--mono); font-size: 11px; color: var(--accent); min-width: 28px; padding-top: 2px; }
+    .ref-body { font-size: clamp(11px, 1.3vw, 13px); color: var(--text-mid); line-height: 1.55; }
+    .ref-body a { color: var(--accent); text-decoration: none; }
+    .ref-body a:hover { text-decoration: underline; }
+    .ref-body em { font-style: italic; color: var(--text-hi); }
+    .slide-src {
+      margin-top: 14px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-lo);
+      font-style: italic;
+      border-top: 0.5px solid var(--border);
+      padding-top: 8px;
+    }
+
     @media (max-width: 600px) {
       #shell { padding: 12px 14px; gap: 10px; }
       .two-col { grid-template-columns: 1fr; }
@@ -455,6 +479,99 @@
 
 
     <!-- ┌─────────────────────────────────────┐
+         │  SLIDE · Agents have no judgment    │
+         └───────────────────────────────────── -->
+    <div class="slide" data-section="Agents at work">
+      <div class="rule"></div>
+      <h2>Agents don't know what "good" looks like</h2>
+      <p>An agent has no professional judgment, no instinct for intent. It optimizes for the letter of the spec — not the spirit.</p>
+      <div class="callout">
+        <p>An agent tasked with making all tests pass encounters a failing unit test. One perfectly valid solution: replace the assertion with <code>assert True</code>. The tests go green. The problem remains.</p>
+        <div class="attr">— Neal Ford &amp; Sam Newman, O'Reilly Software Architecture Superstream, via Mezzalira (2025) [1]</div>
+      </div>
+      <div class="two-col" style="margin-top:14px;">
+        <div class="card">
+          <div class="card-label">Behavioral verification (easy)</div>
+          <p>Does the code satisfy the spec? Agents are getting good at this. Give them a clear interface contract and they'll deliver.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Capability verification (hard)</div>
+          <p>Is it decoupled? Is the security model sound? Does it fail gracefully at scale? These require human judgment — and agents have inherited our failure modes too.</p>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ┌─────────────────────────────────────┐
+         │  SLIDE · The verification gap       │
+         └───────────────────────────────────── -->
+    <div class="slide" data-section="Agents at work">
+      <div class="rule"></div>
+      <h2>The verification gap</h2>
+      <p>Google and Microsoft both report 25–30% of new code is AI-generated. Nearly half of AI-generated code fails basic security tests — and larger models don't produce significantly more secure code than smaller ones.</p>
+      <div class="callout" style="margin-top:14px;">
+        <p>Andrej Karpathy described the pattern: "I 'Accept All' always, I don't read the diffs anymore." When AI code is good enough most of the time, humans stop reviewing carefully. The errors are there. The reviewers are not.</p>
+        <div class="attr">— Leonardo de Moura, Microsoft Research (2026) [14]</div>
+      </div>
+      <div class="two-col" style="margin-top:14px;">
+        <div class="card">
+          <div class="card-label">The precedent</div>
+          <p>Heartbleed — one bug, one human, one library — exposed millions of users and cost hundreds of millions to fix. AI generates code at 1,000× the speed across every layer of the stack.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">The path forward</div>
+          <p>Formal verification and mathematical proof provide guarantees, not just confidence. One proof covers every possible input, every edge case. Testing cannot.</p>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ┌─────────────────────────────────────┐
+         │  SLIDE · Code is cheap, good isn't  │
+         └───────────────────────────────────── -->
+    <div class="slide" data-section="Agents at work">
+      <div class="rule"></div>
+      <h2>Writing code is cheap now — good code is not</h2>
+      <p>Coding agents have collapsed the cost of putting code into a computer. But "delivering code" and "delivering good code" are different things.</p>
+      <div class="two-col" style="margin-top:14px;">
+        <div class="card">
+          <div class="card-label">What changed</div>
+          <p>Hundreds of our engineering habits — estimating, planning, deciding whether a refactor is worth it — were built around expensive coding time. That constraint is gone. The habits haven't caught up.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">What didn't change</div>
+          <p>Good code still requires correctness, tests, documentation, error handling, and maintainability. Agents help with most of these — but the developer driving the agent is still responsible for all of them.</p>
+        </div>
+      </div>
+      <div class="slide-src">— Simon Willison, Agentic Engineering Patterns (2025) [13]</div>
+    </div>
+
+
+    <!-- ┌─────────────────────────────────────┐
+         │  SLIDE · The velocity paradox       │
+         └───────────────────────────────────── -->
+    <div class="slide" data-section="Agents at work">
+      <div class="rule"></div>
+      <h2>The velocity paradox</h2>
+      <p>AI coding assistants have made individual developers dramatically faster. Overall project velocity has barely moved. Why?</p>
+      <div class="callout">
+        <p>Coding is only a small part of the software development lifecycle. Speed up only that part and you get 10× faster code generation — but only 10% faster shipping. The bottleneck simply moves elsewhere.</p>
+        <div class="attr">— Agoda Engineering, Feb 2026 (citing Fred Brooks, "No Silver Bullet", 1986) [2,3]</div>
+      </div>
+      <div class="two-col" style="margin-top:14px;">
+        <div class="card">
+          <div class="card-label">The specification gap</div>
+          <p>Vague tickets lead to perfectly coded but incorrect features. We're building the wrong thing faster.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">The review bottleneck</div>
+          <p>One engineer can now generate 259 PRs in a month. Who reviews them? Line-by-line review doesn't scale — reviewers burn out or start rubber-stamping.</p>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ┌─────────────────────────────────────┐
          │  SLIDE 05 · Getting started steps   │
          └───────────────────────────────────── -->
     <div class="slide" data-section="Agents at work">
@@ -482,6 +599,7 @@
           <div class="step-body"><strong>Iterate on the prompt, not just the output</strong> — bad results usually trace back to an unclear goal, not a broken model.</div>
         </div>
       </div>
+      <div class="slide-src">— The Atomic Architect (2025), Medium [4]</div>
     </div>
 
 
@@ -509,6 +627,7 @@
       <p>A language model generates plausible-sounding text by predicting the most statistically likely next token. It has no internal fact-checker — if confident-sounding text fits the pattern, it will produce it.</p>
       <div class="callout">
         <p>The model is not lying. It doesn't know it's wrong. It completed a pattern — and the pattern led somewhere false.</p>
+        <div class="attr">— Huang et al. (2023), ACM Trans. Inf. Syst.; Xu et al. (2024), arXiv [5,6]</div>
       </div>
       <div class="tags" style="margin-top:16px;">
         <span class="tag">Fabricated citations</span>
@@ -516,6 +635,30 @@
         <span class="tag">Non-existent APIs</span>
         <span class="tag">Confident errors</span>
         <span class="tag">Plausible nonsense</span>
+      </div>
+    </div>
+
+
+    <!-- ┌─────────────────────────────────────┐
+         │  SLIDE · Hallucinating with AI      │
+         └───────────────────────────────────── -->
+    <div class="slide" data-section="Avoiding hallucinations">
+      <div class="rule"></div>
+      <h2>We don't just get hallucinated at — we hallucinate <em>with</em> AI</h2>
+      <p>Research from the University of Exeter identifies a deeper problem: because generative AI takes the user's own interpretation of reality as the starting point, it can sustain, affirm, and elaborate on false beliefs — not just introduce new ones.</p>
+      <div class="two-col" style="margin-top: 14px;">
+        <div class="card">
+          <div class="card-label">The dual function</div>
+          <p>AI acts as both a cognitive tool <em>and</em> a conversational partner. Unlike a notebook, a chatbot creates a sense of social validation — making ideas feel confirmed and shared.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Why it compounds</div>
+          <p>AI companions are always available, often sycophantic by design, and rarely push back the way a colleague would. False narratives can become increasingly detailed and self-consistent.</p>
+        </div>
+      </div>
+      <div class="callout" style="margin-top: 14px;">
+        <p>The combination of technological authority and social affirmation creates an ideal environment for delusions to not merely persist but to flourish.</p>
+        <div class="attr">— Dr. Lucy Osler, University of Exeter — Philosophy &amp; Technology (2026) [7]</div>
       </div>
     </div>
 
@@ -536,7 +679,7 @@
             </div>
             <div class="step">
               <div class="step-n">→</div>
-              <div class="step-body">Summarise old context before long sessions</div>
+              <div class="step-body">Summarize old context before long sessions</div>
             </div>
             <div class="step">
               <div class="step-n">→</div>
@@ -549,6 +692,7 @@
           <p>If your context fills more than ~70% of the window, reliability drops. Trim aggressively.</p>
         </div>
       </div>
+      <div class="slide-src">— Lewis et al. (2020), NeurIPS — Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks [8]</div>
     </div>
 
 
@@ -570,6 +714,7 @@
         </div>
       </div>
       <p class="note">// Add your org's security policy reference here</p>
+      <div class="slide-src">— Liu et al. (2023), arXiv:2306.05499 — 31 of 36 real-world LLM apps found vulnerable [9]</div>
     </div>
 
 
@@ -628,6 +773,7 @@
       <p>A large language model is a mathematical function. It takes a sequence of tokens as input and outputs a probability distribution over possible next tokens. That's the entirety of the operation.</p>
       <div class="callout">
         <p>There is no reasoning engine, no knowledge store, no understanding. There is a very large matrix of numbers, trained to predict what text comes next.</p>
+        <div class="attr">— Downes et al. (2024), arXiv:2408.04666 [10]</div>
       </div>
       <div class="tags" style="margin-top:16px;">
         <span class="tag hi">Prediction engine</span>
@@ -660,6 +806,79 @@
 
 
     <!-- ┌─────────────────────────────────────┐
+         │  SLIDE · AI is reshaping how we think│
+         └───────────────────────────────────── -->
+    <div class="slide" data-section="AI is not intelligence">
+      <div class="rule"></div>
+      <h2>AI is not passive — it reshapes how you think</h2>
+      <p>Every powerful tool changes its user. The printing press changed how we remember. GPS changed how we navigate. Generative AI may be changing how we form beliefs — and how confidently we hold them.</p>
+      <div class="two-col" style="margin-top:16px;">
+        <div class="card">
+          <div class="card-label">The concern</div>
+          <p>When AI produces fluent, confident answers on demand, users may stop interrogating their own assumptions. The tool starts to define what questions are worth asking.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">The implication</div>
+          <p>Understanding what the model is — a statistical pattern-matcher, not an oracle — is not just academic. It's the difference between using AI and being shaped by it.</p>
+        </div>
+      </div>
+      <p class="note">// See also: Kidd &amp; Birhane (2023), "How AI can distort human beliefs", <em>Science</em> 380:1222</p>
+      <div class="slide-src">— Osler, L. / SciTechDaily, University of Exeter (2025) [11]</div>
+    </div>
+
+
+    <!-- ┌─────────────────────────────────────┐
+         │  SLIDE · Society of thought         │
+         └───────────────────────────────────── -->
+    <div class="slide" data-section="AI is not intelligence">
+      <div class="rule"></div>
+      <h2>Intelligence may be social — even inside a single model</h2>
+      <p>A new study of frontier reasoning models like DeepSeek-R1 found they don't improve simply by "thinking longer." Instead, they spontaneously simulate multi-agent internal debates — what the researchers call a "society of thought."</p>
+      <div class="callout" style="margin-top:14px;">
+        <p>None of these models were trained to produce societies of thought. When rewarded solely for reasoning accuracy, they rediscovered — through optimization pressure alone — that robust reasoning is a social process.</p>
+        <div class="attr">— Evans, Bratton &amp; Agüera y Arcas, Google / Santa Fe Institute (2026) [15]</div>
+      </div>
+      <p style="margin-top:14px;">The implication is architectural. More capable AI doesn't come from larger models or longer prompts — it comes from designing <em>combinatorial societies of specialized agents</em>: one agent specialized in security, another in a specific language, another in verification, coordinating under institutional protocols that create checks and balances. A city, not a single brain.</p>
+    </div>
+
+
+    <!-- ┌─────────────────────────────────────┐
+         │  SLIDE · We are not our tools       │
+         └───────────────────────────────────── -->
+    <div class="slide" data-section="AI is not intelligence">
+      <div class="rule"></div>
+      <h2>We are not our tools</h2>
+      <p>Every generation has faced a version of this moment. The printing press was going to destroy the church. The assembly line was going to destroy craftsmanship. The internet was going to destroy truth.</p>
+      <div class="callout">
+        <p>Somewhere along the way, we started to confuse what a tool <em>can</em> do with what a tool <em>should</em> do. We began to believe that because a capability exists, it must be deployed.</p>
+        <div class="attr">— Eric Markowitz, Big Think / The Long Game (2025) [12]</div>
+      </div>
+      <p style="margin-top:16px;">The real questions AI is forcing us to ask are not technical. They are moral: What is work for? What do we owe each other? What does growth mean? No algorithm is going to answer those for us.</p>
+    </div>
+
+
+    <!-- ┌─────────────────────────────────────┐
+         │  SLIDE · De-skilling                │
+         └───────────────────────────────────── -->
+    <div class="slide" data-section="AI is not intelligence">
+      <div class="rule"></div>
+      <h2>AI may be de-skilling the workers it was built to help</h2>
+      <p>Routine tasks — drafting, formatting, reconciling data — are also training. When an analyst painstakingly formats a dataset, they internalize standards of quality, precision, and structure. When AI does it for them, that learning disappears.</p>
+      <div class="two-col" style="margin-top:14px;">
+        <div class="card">
+          <div class="card-label">The tacit knowledge problem</div>
+          <p>If AI drafts the client memo, the junior worker may never develop a feel for argument structure. If AI generates the charts, the analyst may never learn to spot anomalies that matter.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">The generational divide</div>
+          <p>Senior workers use AI as augmentation because they have the domain expertise to evaluate it. Junior workers building careers on top of AI from day one may be building on sand.</p>
+        </div>
+      </div>
+      <div class="slide-src">— Olson, A., Inc. (2026) [16]</div>
+    </div>
+
+
+    <!-- ┌─────────────────────────────────────┐
          │  SLIDE 14 · Language that helps     │
          └───────────────────────────────────── -->
     <div class="slide" data-section="AI is not intelligence">
@@ -672,7 +891,7 @@
         </div>
         <div class="card">
           <div class="card-label">Say instead</div>
-          <p style="color:var(--accent)">"The model <em>generates</em> text that…"<br>"It <em>produces output consistent with</em>…"<br>"It was <em>trained on data</em> about X"<br>"It was <em>optimised</em> to do this"<br>"AI is <em>capable of</em>…"</p>
+          <p style="color:var(--accent)">"The model <em>generates</em> text that…"<br>"It <em>produces output consistent with</em>…"<br>"It was <em>trained on data</em> about X"<br>"It was <em>optimized</em> to do this"<br>"AI is <em>capable of</em>…"</p>
         </div>
       </div>
       <p class="note">// Precise language builds credibility with technical audiences and reduces misplaced trust with non-technical ones.</p>
@@ -693,7 +912,7 @@
         </div>
         <div class="step">
           <div class="step-n">✓</div>
-          <div class="step-body"><strong>Pattern matching at scale</strong> — classifying, summarising, extracting from large volumes of text</div>
+          <div class="step-body"><strong>Pattern matching at scale</strong> — classifying, summarizing, extracting from large volumes of text</div>
         </div>
         <div class="step">
           <div class="step-n">✓</div>
@@ -801,6 +1020,108 @@
     </div>
 
 
+    <!-- ┌─────────────────────────────────────┐
+         │  SLIDE · Verifying sources AND      │
+         │  their interpretation               │
+         └───────────────────────────────────── -->
+    <div class="slide" data-section="Case study">
+      <div class="rule"></div>
+      <h2>The human caught more than a broken file</h2>
+      <p>Later in this same session, a slide was added citing Evans et al. (arXiv:2603.20639). The presenter provided the link; the AI fetched and read the paper. The source was real, the citation was accurate — but the interpretation was subtly wrong.</p>
+      <div class="callout" style="margin-top:14px;">
+        <p>The original slide read: <em>"This doesn't make AI 'intelligent' in any human sense. But it suggests the simple 'next-token predictor' framing undersells what's happening."</em> That framing was factually incorrect — it misrepresented the paper's actual argument, which is that capability comes from <em>combinatorial societies of specialized agents</em>, each with distinct expertise, coordinated under institutional protocols. A city, not a single brain.</p>
+        <div class="attr">— Corrected in review by the presenter, referencing the abstract directly</div>
+      </div>
+      <div class="two-col" style="margin-top:14px;">
+        <div class="card">
+          <div class="card-label">What AI got right</div>
+          <p>It fetched the correct paper, cited the correct authors and DOI, and captured the general theme of social AI architectures.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">What the human caught</div>
+          <p>The interpretation was a generalization that lost the paper's specific mechanism — specialization and institutional coordination — and replaced it with a vaguer claim.</p>
+        </div>
+      </div>
+      <p style="margin-top:14px;">Verifying AI output means checking two things independently: that the <em>source exists and says what it's claimed to say</em>, and that the <em>interpretation of it is accurate</em>. Both can fail. Only one usually gets checked.</p>
+    </div>
+
+
+    <!-- ┌─────────────────────────────────────┐
+         │  SLIDE · References                 │
+         └───────────────────────────────────── -->
+    <div class="slide" data-section="References">
+      <div class="rule"></div>
+      <h2>References</h2>
+      <div class="ref-list">
+        <div class="ref-item">
+          <span class="ref-num">[1]</span>
+          <div class="ref-body">Mezzalira, L. (2025). <em>Agents don't know what good looks like. And that's exactly the problem.</em> O'Reilly Radar, summarizing Ford &amp; Newman, O'Reilly Software Architecture Superstream. <a href="https://www.oreilly.com/radar/agents-dont-know-what-good-looks-like-and-thats-exactly-the-problem/" target="_blank">oreilly.com/radar</a></div>
+        </div>
+        <div class="ref-item">
+          <span class="ref-num">[2]</span>
+          <div class="ref-body">Agoda Engineering / Stern, L. (2026). <em>From Implementers to Solution Architects: Why AI Makes Your Specs the New Bottleneck.</em> Medium. <a href="https://medium.com/agoda-engineering/from-implementers-to-solution-architects-250a95087d75" target="_blank">medium.com/agoda-engineering</a></div>
+        </div>
+        <div class="ref-item">
+          <span class="ref-num">[3]</span>
+          <div class="ref-body">InfoQ (2026). <em>AI Coding Assistants Haven't Sped up Delivery Because Coding Was Never the Bottleneck.</em> <a href="https://www.infoq.com/news/2026/03/agoda-ai-code-bottleneck/" target="_blank">infoq.com</a></div>
+        </div>
+        <div class="ref-item">
+          <span class="ref-num">[4]</span>
+          <div class="ref-body">The Atomic Architect (2025). <em>AI Coding Agents: Judgment, Skill, Engineering.</em> Medium. <a href="https://medium.com/@the_atomic_architect/ai-coding-agents-judgment-skill-engineering-eda0dc42319a" target="_blank">medium.com/@the_atomic_architect</a></div>
+        </div>
+        <div class="ref-item">
+          <span class="ref-num">[5]</span>
+          <div class="ref-body">Huang et al. (2023). <em>A Survey on Hallucination in Large Language Models: Principles, Taxonomy, Challenges, and Open Questions.</em> ACM Transactions on Information Systems. <a href="https://arxiv.org/abs/2311.05232" target="_blank">arXiv:2311.05232</a></div>
+        </div>
+        <div class="ref-item">
+          <span class="ref-num">[6]</span>
+          <div class="ref-body">Xu et al. (2024). <em>Hallucination is Inevitable: An Innate Limitation of Large Language Models.</em> <a href="https://arxiv.org/abs/2401.11817" target="_blank">arXiv:2401.11817</a></div>
+        </div>
+        <div class="ref-item">
+          <span class="ref-num">[7]</span>
+          <div class="ref-body">Osler, L. (2026). <em>Hallucinating with AI: Distributed Delusions and "AI Psychosis".</em> Philosophy &amp; Technology. University of Exeter. <a href="https://doi.org/10.1007/s13347-026-01034-3" target="_blank">doi:10.1007/s13347-026-01034-3</a></div>
+        </div>
+        <div class="ref-item">
+          <span class="ref-num">[8]</span>
+          <div class="ref-body">Lewis et al. (2020). <em>Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks.</em> NeurIPS 2020. <a href="https://arxiv.org/abs/2005.11401" target="_blank">arXiv:2005.11401</a></div>
+        </div>
+        <div class="ref-item">
+          <span class="ref-num">[9]</span>
+          <div class="ref-body">Liu et al. (2023). <em>Prompt Injection Attack against LLM-integrated Applications.</em> <a href="https://arxiv.org/abs/2306.05499" target="_blank">arXiv:2306.05499</a> — 31 of 36 real-world LLM apps found vulnerable.</div>
+        </div>
+        <div class="ref-item">
+          <span class="ref-num">[10]</span>
+          <div class="ref-body">Downes et al. (2024). <em>LLMs are Not Just Next Token Predictors.</em> <a href="https://arxiv.org/abs/2408.04666" target="_blank">arXiv:2408.04666</a> — confirms the statistical model framing while arguing the reduction has limits.</div>
+        </div>
+        <div class="ref-item">
+          <span class="ref-num">[11]</span>
+          <div class="ref-body">SciTechDaily / Osler, L. (2025). <em>Is AI Really Just a Tool? It Could Be Altering How You See Reality.</em> University of Exeter. <a href="https://scitechdaily.com/is-ai-really-just-a-tool-it-could-be-altering-how-you-see-reality/" target="_blank">scitechdaily.com</a> — see also Kidd &amp; Birhane (2023), <em>Science</em> 380:1222.</div>
+        </div>
+        <div class="ref-item">
+          <span class="ref-num">[12]</span>
+          <div class="ref-body">Markowitz, E. (2025). <em>It was never about AI — we are not our tools.</em> Big Think / The Long Game. <a href="https://bigthink.com/the-long-game/it-was-never-about-ai-we-are-not-our-tools/" target="_blank">bigthink.com</a></div>
+        </div>
+        <div class="ref-item">
+          <span class="ref-num">[13]</span>
+          <div class="ref-body">Willison, S. (2025). <em>Writing Code Is Cheap Now.</em> Agentic Engineering Patterns. <a href="https://simonwillison.net/guides/agentic-engineering-patterns/code-is-cheap/" target="_blank">simonwillison.net</a></div>
+        </div>
+        <div class="ref-item">
+          <span class="ref-num">[14]</span>
+          <div class="ref-body">de Moura, L. (2026). <em>When AI Writes the World's Software, Who Verifies It?</em> Microsoft Research. <a href="https://leodemoura.github.io/blog/2026-2-28-when-ai-writes-the-worlds-software-who-verifies-it/" target="_blank">leodemoura.github.io</a></div>
+        </div>
+        <div class="ref-item">
+          <span class="ref-num">[15]</span>
+          <div class="ref-body">Evans, J., Bratton, B. &amp; Agüera y Arcas, B. (2026). <em>Agentic AI and the Next Intelligence Explosion.</em> Google / Santa Fe Institute. <a href="https://arxiv.org/abs/2603.20639" target="_blank">arXiv:2603.20639</a></div>
+        </div>
+        <div class="ref-item">
+          <span class="ref-num">[16]</span>
+          <div class="ref-body">Olson, A. (2026). <em>How AI Automation Is Quietly De-Skilling White-Collar Workers.</em> Inc. <a href="https://www.inc.com/andrea-olson/how-ai-automation-is-quietly-deskilling-white-collar-workers/91316067" target="_blank">inc.com</a></div>
+        </div>
+      </div>
+      <p class="note">// Add further references here as content expands. All arXiv papers are open-access; articles link directly to source.</p>
+    </div>
+
+
     <!-- ════════════════════════════════════════
          CLOSING
     ═════════════════════════════════════════ -->
@@ -859,7 +1180,7 @@
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   /* =============================================
      NAVIGATION ENGINE — no need to edit this
-     unless you want to change behaviour
+     unless you want to change behavior
   ============================================= */
   const slides  = Array.from(document.querySelectorAll('.slide'));
   const total   = slides.length;
